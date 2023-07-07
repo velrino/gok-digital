@@ -1,25 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Row, Col, Button } from 'antd';
 import html2canvas from 'html2canvas';
 import { UploadOutlined } from '@ant-design/icons';
+import ReactCrop from 'react-image-crop'
+import { ImageUploader } from '../../../components/image-uploader';
+import { ImageUploaderInput } from '../../../components/image-uploader/input';
+import { Emitter } from '../../../utils/emitter';
 
 export const SiteHomePage: React.FC = () => {
     const gridRef = useRef<HTMLDivElement>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const imageUrls = [...imageList];
-                imageUrls[index] = e.target?.result as string;
-                setImageList(imageUrls);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const resetImages = () => {
         setImageList([
@@ -29,6 +19,13 @@ export const SiteHomePage: React.FC = () => {
             '/photos/grid/image_2.png',
         ])
     };
+
+    const toggleUploadButton = (currentDisplay: 'none' | 'block') => {
+        const uploadButtons = document.querySelectorAll('.upload-button');
+        uploadButtons.forEach((button) => {
+            (button as HTMLElement).style.display = currentDisplay;
+        });
+    }
 
     const generateImage = () => {
         if (gridRef.current) {
@@ -48,6 +45,16 @@ export const SiteHomePage: React.FC = () => {
         '/photos/grid/image_2.png',
     ]);
 
+    useEffect(() => {
+        Emitter.EventEmitter.addListener(Emitter.Event.Action.CompleteUploadImage, (params: any) => {
+            let currentList = imageList;
+
+            currentList[params.index] = URL.createObjectURL(params.value);
+
+            setImageList([...currentList]);
+        })
+    }, []);
+
     return (
         <>
             <Row justify={'center'}>
@@ -64,7 +71,7 @@ export const SiteHomePage: React.FC = () => {
                             <Col key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
                                 <div className="image-container">
                                     <img src={url} alt={`Imagem ${index + 1}`} />
-                                    {hoveredIndex === index && (
+                                    {/* {hoveredIndex === index && (
                                         <label className="upload-button">
                                             <div onClick={() => fileInputRef.current?.click()} className="clickable">
                                                 <input
@@ -77,7 +84,13 @@ export const SiteHomePage: React.FC = () => {
                                                 <Button icon={<UploadOutlined />} />
                                             </div>
                                         </label>
-                                    )}
+                                    )} */}
+                                    {
+                                        hoveredIndex === index && (
+                                            <label className="upload-button">
+                                                <ImageUploaderInput index={index} />
+                                            </label>)
+                                    }
                                 </div>
                             </Col>
                         ))}
@@ -97,6 +110,7 @@ export const SiteHomePage: React.FC = () => {
                     <Button onClick={generateImage}>Salvar como PNG</Button>
                 </Col>
             </Row>
+            <ImageUploader />
         </>
     );
 };
