@@ -1,0 +1,46 @@
+body {
+  background-color: #38d430;
+  color: white;
+}
+
+$image-height: 395px;
+$image-width: 175px;
+
+.container {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // height: 100vh;
+  // background-color: red;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.image-grid {
+  /* Seus estilos de grid */
+  display: flex;
+  background-color: red;
+  min-height: $image-height;
+  max-height: $image-height;
+}
+
+.image-container {
+  position: relative;
+
+  img {
+    min-height: $image-height;
+    max-height: $image-height;
+    min-width: $image-width;
+    max-width: $image-width;
+    object-fit: cover;
+  }
+
+  // max-width: 176px;
+}
+
+.upload-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
