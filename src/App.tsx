@@ -9,6 +9,10 @@ export default function App() {
   return (<>
     <ConfigProvider theme={{
       algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
+      token: {
+        colorPrimary: '#4caf50',
+        wireframe: false,
+      },
     }}>
       <div className={isDarkMode ? "base-content dark-theme" : "base-content light-theme"}>
         <MainRoutes />

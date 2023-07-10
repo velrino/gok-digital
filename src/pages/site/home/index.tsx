@@ -30,11 +30,23 @@ export const SiteHomePage: React.FC = () => {
     const generateImage = () => {
         if (gridRef.current) {
             html2canvas(gridRef.current).then((canvas) => {
+                const bwCanvas = document.createElement('canvas');
+                const bwContext = bwCanvas.getContext('2d');
+
+                if (!bwContext) return;
+
+                bwCanvas.width = canvas.width;
+                bwCanvas.height = canvas.height;
+
+
+                bwContext.drawImage(canvas, 0, 0);
+
                 const img = document.createElement('a');
-                img.href = canvas.toDataURL();
+                img.href = bwCanvas.toDataURL();
                 img.download = 'grid.png';
                 img.click();
             });
+
         }
     };
 
@@ -70,21 +82,10 @@ export const SiteHomePage: React.FC = () => {
                         {imageList.map((url, index) => (
                             <Col key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
                                 <div className="image-container">
-                                    <img src={url} alt={`Imagem ${index + 1}`} />
-                                    {/* {hoveredIndex === index && (
-                                        <label className="upload-button">
-                                            <div onClick={() => fileInputRef.current?.click()} className="clickable">
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    ref={fileInputRef}
-                                                    onChange={(e) => handleImageUpload(e, index)}
-                                                    style={{ display: 'none' }}
-                                                />
-                                                <Button icon={<UploadOutlined />} />
-                                            </div>
-                                        </label>
-                                    )} */}
+                                    <div className="image-container">
+                                        <img src={url} alt={`Imagem ${index + 1}`} className="image image-black-and-white" />
+                                        <div className={(index % 2 === 0) ? '' : 'image-overlay'}></div>
+                                    </div>
                                     {
                                         hoveredIndex === index && (
                                             <label className="upload-button">
