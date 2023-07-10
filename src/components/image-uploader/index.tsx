@@ -30,9 +30,9 @@ const defaultData = {
 export const ImageUploader = () => {
   const [selectedImage, setSelectedImage] = useState(defaultData.selectedImage);
   const [crop, setCrop] = useState<Crop>({
-    height: 395,
+    height: 414,
     unit: 'px',
-    width: 195,
+    width: 180,
     x: 25,
     y: 25
   });
@@ -41,9 +41,9 @@ export const ImageUploader = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>({
-    height: 395,
+    height: 414,
     unit: 'px',
-    width: 175,
+    width: 180,
     x: 0,
     y: 0
   });
@@ -162,7 +162,7 @@ export const ImageUploader = () => {
     closeModal();
   };
 
-  const [aspect, setAspect] = useState<number | undefined>(175 / 395);
+  const [aspect, setAspect] = useState<number | undefined>(180 / 414);
 
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     if (aspect) {

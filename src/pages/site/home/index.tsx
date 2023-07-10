@@ -7,16 +7,23 @@ import { ImageUploader } from '../../../components/image-uploader';
 import { ImageUploaderInput } from '../../../components/image-uploader/input';
 import { Emitter } from '../../../utils/emitter';
 
+const defaultImagesList = [
+    "/photos/grid/image_1.png",
+    '/photos/grid/image_2.png',
+    '/photos/grid/image_3.png',
+    '/photos/grid/image_4.png',
+]
+
 export const SiteHomePage: React.FC = () => {
     const gridRef = useRef<HTMLDivElement>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     const resetImages = () => {
         setImageList([
-            "/photos/grid/image_3.png",
+            "/photos/grid/image_1.png",
             '/photos/grid/image_2.png',
             '/photos/grid/image_3.png',
-            '/photos/grid/image_2.png',
+            '/photos/grid/image_4.png',
         ])
     };
 
@@ -28,8 +35,10 @@ export const SiteHomePage: React.FC = () => {
     }
 
     const generateImage = () => {
-        if (gridRef.current) {
-            html2canvas(gridRef.current).then((canvas) => {
+        const divToCapture = document.getElementById('gok-grid');
+
+        if (divToCapture) {
+            html2canvas(divToCapture).then((canvas) => {
                 const bwCanvas = document.createElement('canvas');
                 const bwContext = bwCanvas.getContext('2d');
 
@@ -38,24 +47,19 @@ export const SiteHomePage: React.FC = () => {
                 bwCanvas.width = canvas.width;
                 bwCanvas.height = canvas.height;
 
-
                 bwContext.drawImage(canvas, 0, 0);
 
                 const img = document.createElement('a');
-                img.href = bwCanvas.toDataURL();
-                img.download = 'grid.png';
+                img.href = bwCanvas.toDataURL('image/png');
+                img.download = `gok-cover-linkedin-${new Date().getTime()}.png`;
                 img.click();
             });
 
         }
     };
 
-    const [imageList, setImageList] = useState<string[]>([
-        "/photos/grid/image_3.png",
-        '/photos/grid/image_2.png',
-        '/photos/grid/image_3.png',
-        '/photos/grid/image_2.png',
-    ]);
+
+    const [imageList, setImageList] = useState<string[]>(defaultImagesList);
 
     useEffect(() => {
         Emitter.EventEmitter.addListener(Emitter.Event.Action.CompleteUploadImage, (params: any) => {
@@ -78,7 +82,7 @@ export const SiteHomePage: React.FC = () => {
             </Row>
             <Row className="container" justify={'center'}>
                 <Col>
-                    <div className="image-grid" ref={gridRef}>
+                    <div className="image-grid" ref={gridRef} id='gok-grid'>
                         {imageList.map((url, index) => (
                             <Col key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
                                 <div className="image-container">
@@ -97,7 +101,7 @@ export const SiteHomePage: React.FC = () => {
                         ))}
                         <Col>
                             <div>
-                                <img src={'/photos/grid/image_5.png'} alt={`Imagem 5`} />
+                                <img src={'/photos/grid/image_5.png'} height={414} />
                             </div>
                         </Col>
                     </div>
