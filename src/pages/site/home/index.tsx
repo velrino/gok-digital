@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Row, Col, Button } from 'antd';
 import html2canvas from 'html2canvas';
-import { UploadOutlined } from '@ant-design/icons';
-import ReactCrop from 'react-image-crop'
 import { ImageUploader } from '../../../components/image-uploader';
 import { ImageUploaderInput } from '../../../components/image-uploader/input';
 import { Emitter } from '../../../utils/emitter';
@@ -27,34 +25,28 @@ export const SiteHomePage: React.FC = () => {
         ])
     };
 
-    const toggleUploadButton = (currentDisplay: 'none' | 'block') => {
-        const uploadButtons = document.querySelectorAll('.upload-button');
-        uploadButtons.forEach((button) => {
-            (button as HTMLElement).style.display = currentDisplay;
-        });
-    }
-
     const generateImage = () => {
         const divToCapture = document.getElementById('gok-grid');
 
         if (divToCapture) {
-            html2canvas(divToCapture).then((canvas) => {
-                const bwCanvas = document.createElement('canvas');
-                const bwContext = bwCanvas.getContext('2d');
 
-                if (!bwContext) return;
+            const windowWidth = divToCapture.scrollWidth;
+            const windowHeight = 414;
 
-                bwCanvas.width = canvas.width;
-                bwCanvas.height = canvas.height;
-
-                bwContext.drawImage(canvas, 0, 0);
-
-                const img = document.createElement('a');
-                img.href = bwCanvas.toDataURL('image/png');
-                img.download = `gok-cover-linkedin-${new Date().getTime()}.png`;
-                img.click();
+            html2canvas(divToCapture, {
+                windowWidth: windowWidth,
+                windowHeight: windowHeight,
+                scrollX: window.scrollX,
+                scrollY: window.scrollY,
+                width: windowWidth,
+                height: windowHeight,
+                scale: 1.5,
+            }).then((canvas) => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `gok-cover-linkedin-${new Date().getTime()}.png`;
+                link.click();
             });
-
         }
     };
 
@@ -81,29 +73,36 @@ export const SiteHomePage: React.FC = () => {
                 </Col>
             </Row>
             <Row className="container" justify={'center'}>
-                <Col>
-                    <div className="image-grid" ref={gridRef} id='gok-grid'>
-                        {imageList.map((url, index) => (
-                            <Col key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
-                                <div className="image-container">
-                                    <div className="image-container">
-                                        <img src={url} alt={`Imagem ${index + 1}`} className="image image-black-and-white" />
-                                        <div className={(index % 2 === 0) ? '' : 'image-overlay'}></div>
-                                    </div>
-                                    {
-                                        hoveredIndex === index && (
-                                            <label className="upload-button">
-                                                <ImageUploaderInput index={index} />
-                                            </label>)
-                                    }
+                <Col lg={24}>
+                    <div style={{ overflowX: 'auto' }}>
+
+                        <Row className="container" justify={'center'}>
+                            <Col>
+                                <div className="image-grid" ref={gridRef} id='gok-grid'>
+                                    {imageList.map((url, index) => (
+                                        <Col key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
+                                            <div className="image-container">
+                                                <div className="image-container">
+                                                    <img src={url} alt={`Imagem ${index + 1}`} className="image image-black-and-white" />
+                                                    <div className={(index % 2 === 0) ? '' : 'image-overlay'}></div>
+                                                </div>
+                                                {
+                                                    hoveredIndex === index && (
+                                                        <label className="upload-button">
+                                                            <ImageUploaderInput index={index} />
+                                                        </label>)
+                                                }
+                                            </div>
+                                        </Col>
+                                    ))}
+                                    <Col>
+                                        <div>
+                                            <img src={'/photos/grid/image_5.png'} />
+                                        </div>
+                                    </Col>
                                 </div>
                             </Col>
-                        ))}
-                        <Col>
-                            <div>
-                                <img src={'/photos/grid/image_5.png'} height={414} />
-                            </div>
-                        </Col>
+                        </Row>
                     </div>
                 </Col>
             </Row>

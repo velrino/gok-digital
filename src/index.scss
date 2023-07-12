@@ -18,6 +18,11 @@ $image-width: 180px;
   background-color: transparent;
   min-height: $image-height;
   max-height: $image-height;
+
+  img {
+    min-height: $image-height;
+    max-height: $image-height;
+  }
 }
 
 .image-container {
