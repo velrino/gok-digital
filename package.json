@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.2.4",
     "antd": "^5.5.1",
     "fbemitter": "^3.0.0",
+    "gif.js": "^0.2.0",
     "html2canvas": "^1.4.1",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
@@ -53,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/fbemitter": "^2.0.32"
+    "@types/fbemitter": "^2.0.32",
+    "@types/gif.js": "^0.2.2"
   }
 }
