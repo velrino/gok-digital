@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Row, Col, Button, Input, Radio, RadioChangeEvent } from 'antd';
-import { ImageUploader } from '../../../components/image-uploader';
+import { Row, Col, Button, Input, Radio, RadioChangeEvent, TabsProps, Tabs, Typography } from 'antd';
 import { Emitter } from '../../../utils/emitter';
 import { GownerTemplate, SignatureTemplate } from './template';
 import TextArea from 'antd/es/input/TextArea';
+import { NotificationTypeEnum } from '../../notification';
 
 export const GenerateSignatureComponent: React.FC = () => {
     const gridRef = useRef<HTMLDivElement>(null);
@@ -24,9 +24,9 @@ export const GenerateSignatureComponent: React.FC = () => {
             return url;
         };
 
-        const gowner = (formData.gowner === 'yes') ? GownerTemplate : '';
+        const gowner = (formData.gowner === 'GOWNER') ? GownerTemplate : '';
         const phoneInformed = (formData.phone.length) ? `<div>Tel. ${formData.phone}</div>` : '';
-        const telephoneInformed = (formData.telephone.length) ? `<div>Tel. ${formData.telephone}</div>` : '';
+        const telephoneInformed = (formData.telephone.length) ? `<div>Cel. ${formData.telephone}</div>` : '';
 
         const source = replaceCumulative(SignatureTemplate,
             ["NOME", 'CARGO', 'EMAIL', `PHONE`, 'CELULAR', 'GOWNER'],
@@ -55,7 +55,7 @@ export const GenerateSignatureComponent: React.FC = () => {
         email: 'goker@gok.digital',
         phone: '11 20000 0000',
         telephone: '11 9 0000 0000',
-        gowner: 'yes',
+        gowner: 'GOWNER',
     });
 
     useEffect(() => { getGeneratedPageURL() }, [formData])
@@ -76,19 +76,72 @@ export const GenerateSignatureComponent: React.FC = () => {
     };
 
     const textareaRef: any = useRef(null);
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+
     const copyCode = () => {
-        if (textareaRef.current) {
-            textareaRef.current.select();
-            navigator.clipboard.writeText(textareaRef.current.value)
+        if (iframeRef.current?.contentWindow) {
+            const iframeDocument = iframeRef.current.contentWindow.document;
+            const iframeContent = iframeDocument.documentElement.outerHTML;
+
+            navigator.clipboard.writeText(iframeContent)
                 .then(() => {
-                    textareaRef.current.blur();
-                    console.log('Texto copiado para a área de transferência!');
+                    Emitter.EventEmitter.emit(Emitter.Event.Action.Notification, {
+                        type: NotificationTypeEnum.success,
+                        title: "HTML copiado com sucesso!"
+                    })
                 })
                 .catch((error) => {
-                    console.error('Falha ao copiar o texto:', error);
+                    Emitter.EventEmitter.emit(Emitter.Event.Action.Notification, {
+                        type: NotificationTypeEnum.error,
+                        title: "Falha ao copiar!"
+                    })
                 });
         }
     };
+
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: `Visualização`,
+            children: <>
+                <Row className="container" justify={'center'}>
+                    <Col lg={24} className='text-center margin-bottom-md'>
+                        <Typography.Title level={4} className='margin-0'> Basta apenas selecionar tudo, copiar e colar no seu e-mail</Typography.Title>
+                    </Col>
+                    <Col lg={24}>
+                        <div>
+                            <iframe
+                                ref={iframeRef}
+                                width="100%"
+                                id="renderHtml"
+                                name="renderHtml"
+                            ></iframe>
+                        </div>
+                    </Col>
+                </Row>
+
+            </>,
+        },
+        {
+            key: '2',
+            label: `Código HTML`,
+            children: <>
+                <Row justify={'center'} gutter={16}>
+                    <Col className='margin-bottom-md'>
+                        <Button onClick={copyCode} type='primary'>Copiar</Button>
+                    </Col>
+                    <Col span={24}>
+                        <Input.TextArea
+                            ref={textareaRef}
+                            value={currentCode}
+                            autoSize={{ minRows: 2, maxRows: 10 }}
+                            readOnly
+                        />
+                    </Col>
+                </Row>
+            </>,
+        },
+    ];
 
     return (
         <>
@@ -137,36 +190,12 @@ export const GenerateSignatureComponent: React.FC = () => {
                         />
                     </Col>
                     <Col xs={24} lg={5} className='gok-input'>
-                        <label className='d-block'>Gowner:</label>
-                        <Radio.Group options={['yes', 'no']} buttonStyle="solid" optionType="button" value={formData.gowner} onChange={gownerInput} />
+                        <label className='d-block'>Você é:</label>
+                        <Radio.Group options={['GOWNER', 'GOKER']} buttonStyle="solid" optionType="button" value={formData.gowner} onChange={gownerInput} />
                     </Col>
                 </Row>
             </div>
-            <Row className="container" justify={'center'}>
-                <Col lg={24}>
-                    <div>
-                        <iframe
-                            width="100%"
-                            id="renderHtml"
-                            name="renderHtml"
-                        ></iframe>
-                    </div>
-                </Col>
-            </Row>
-            <Row justify={'center'} gutter={16}>
-                {/* <Col>
-                    <Button onClick={copyCode}>Copiar</Button>
-                </Col> */}
-                <Col span={24}>
-                    <Input.TextArea
-                        ref={textareaRef}
-                        value={currentCode}
-                        autoSize={{ minRows: 2, maxRows: 10 }}
-                        readOnly
-                    />
-                </Col>
-            </Row>
-
+            <Tabs defaultActiveKey="1" items={items} centered={true} />
         </>
     );
 };

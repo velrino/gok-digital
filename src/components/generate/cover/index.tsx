@@ -110,7 +110,7 @@ export const GenerateCoverComponent: React.FC = () => {
                     <Button onClick={resetImages}>Resetar imagens</Button>
                 </Col>
                 <Col>
-                    <Button onClick={generateImage}>Salvar como PNG</Button>
+                    <Button onClick={generateImage} type='primary'>Salvar como PNG</Button>
                 </Col>
             </Row>
             <ImageUploader />
