@@ -4,6 +4,7 @@ import { Emitter } from '../../../utils/emitter';
 import { GownerTemplate, SignatureTemplate } from './template';
 import TextArea from 'antd/es/input/TextArea';
 import { NotificationTypeEnum } from '../../notification';
+import { InputPhoneComponent } from '../../inputs/phone';
 
 export const GenerateSignatureComponent: React.FC = () => {
     const gridRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,7 @@ export const GenerateSignatureComponent: React.FC = () => {
         name: 'Lorem Ipsum',
         job: 'Cargo',
         email: 'goker@gok.digital',
-        phone: '(11) 20000-0000',
+        phone: '(11) 2000-0000',
         telephone: '(11) 90000-0000',
         telephone2: '(11) 91234-5678',
         gowner: 'GOWNER',
@@ -74,6 +75,17 @@ export const GenerateSignatureComponent: React.FC = () => {
         setFormData((prevFormData: any) => ({
             ...prevFormData,
             [name]: value,
+        }));
+    };
+
+    const handleInputPhoneChange = (e: any) => {
+        const { name, value } = e.target;
+        const newValue = value.replace("_", "");
+        const containsNumber = /\d/.test(newValue);
+
+        setFormData((prevFormData: any) => ({
+            ...prevFormData,
+            [name]: (containsNumber) ? newValue : '',
         }));
     };
 
@@ -145,29 +157,6 @@ export const GenerateSignatureComponent: React.FC = () => {
         },
     ];
 
-    const formatarTelefone = (event: any) => {
-        const { name, value } = event.target;
-        let telefoneDigitado = value.replace(/\D/g, '');
-
-
-        let telefoneFormatado = '';
-        if (telefoneDigitado.length > 0) {
-            telefoneFormatado += '(' + telefoneDigitado.substring(0, 2);
-        }
-        if (telefoneDigitado.length > 2) {
-            telefoneFormatado += ') ' + telefoneDigitado.substring(2, 7);
-        }
-        if (telefoneDigitado.length > 7) {
-            telefoneFormatado += '-' + telefoneDigitado.substring(7, 11);
-        }
-
-
-        setFormData((prevFormData: any) => ({
-            ...prevFormData,
-            [name]: telefoneFormatado,
-        }));
-    };
-
     return (
         <>
             <div className='text-center'>
@@ -200,27 +189,15 @@ export const GenerateSignatureComponent: React.FC = () => {
                 <Row gutter={16} justify={'center'} align={'middle'}>
                     <Col xs={24} lg={5} className='gok-input'>
                         <label>Telefone:</label>
-                        <Input
-                            name="phone"
-                            value={formData.phone}
-                            onChange={formatarTelefone}
-                        />
+                        <InputPhoneComponent name="phone" value={formData.phone} onChange={handleInputPhoneChange} />
                     </Col>
                     <Col xs={24} lg={5} className='gok-input'>
                         <label>Celular:</label>
-                        <Input
-                            name="telephone"
-                            value={formData.telephone}
-                            onChange={handleInputChange}
-                        />
+                        <InputPhoneComponent name="telephone" value={formData.telephone} onChange={handleInputPhoneChange} />
                     </Col>
                     <Col xs={24} lg={5} className='gok-input'>
                         <label>Celular 2:</label>
-                        <Input
-                            name="telephone2"
-                            value={formData.telephone2}
-                            onChange={handleInputChange}
-                        />
+                        <InputPhoneComponent name="telephone2" value={formData.telephone2} onChange={handleInputPhoneChange} />
                     </Col>
                 </Row>
                 <Row gutter={16} justify={'center'} align={'middle'}>

@@ -167,3 +167,18 @@ $secondary-color: transparent;
 .margin-bottom-md {
   margin-bottom: 1rem;
 }
+
+.dark-theme {
+  input {
+    background-color: transparent;
+    color: white;
+    border: 0;
+    border-bottom: 1px solid #424242;
+    border-radius: 0 !important;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: none !important;
+    }
+  }
+}
