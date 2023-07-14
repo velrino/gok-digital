@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Typography } from 'antd';
 import html2canvas from 'html2canvas';
 import { ImageUploader } from '../../../components/image-uploader';
 import { ImageUploaderInput } from '../../../components/image-uploader/input';
@@ -77,9 +77,7 @@ export const GenerateCoverComponent: React.FC = () => {
         <>
             <Row justify={'center'}>
                 <Col>
-                    <h1>
-                        Faça upload da sua imagem
-                    </h1>
+                    <Typography.Title level={4} className='margin-0'>Faça upload da sua imagem</Typography.Title>
                 </Col>
             </Row>
             <Row className="container" justify={'center'}>
