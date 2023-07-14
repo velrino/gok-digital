@@ -86,6 +86,7 @@ export const SignatureTemplate = `<html lang="en">
                         </div>
                         PHONE
                         CELULAR
+                        TELEFONE
                     </div>
                 </div>
             </div>
