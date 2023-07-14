@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import { ImageUploader } from '../../../components/image-uploader';
 import { ImageUploaderInput } from '../../../components/image-uploader/input';
 import { Emitter } from '../../../utils/emitter';
+import { NotificationTypeEnum } from '../../notification';
 
 const defaultImagesList = [
     "/photos/grid/image_1.png",
@@ -46,6 +47,15 @@ export const GenerateCoverComponent: React.FC = () => {
                 link.href = canvas.toDataURL('image/png');
                 link.download = `gok-cover-linkedin-${new Date().getTime()}.png`;
                 link.click();
+                Emitter.EventEmitter.emit(Emitter.Event.Action.Notification, {
+                    type: NotificationTypeEnum.success,
+                    title: "Imagem salva com sucesso!"
+                })
+            }).catch((error) => {
+                Emitter.EventEmitter.emit(Emitter.Event.Action.Notification, {
+                    type: NotificationTypeEnum.error,
+                    title: "Falha ao salvar imagem!"
+                })
             });
         }
     };
