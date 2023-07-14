@@ -20,16 +20,14 @@ export const SiteHomePage: React.FC = () => {
 
     return (
         <>
-            <Row justify={'center'}>
-                <Col>
-                    <h1>
-                        GO-K
-                    </h1>
-                </Col>
-            </Row>
             <Row className="container" justify={'center'}>
                 <Col lg={18}>
                     <Card>
+                        <div className='text-center'>
+                            <h1>
+                                <img src='light-gok.png' height={25} />
+                            </h1>
+                        </div>
                         <Tabs defaultActiveKey="2" items={items} centered={true} />
                     </Card>
                 </Col>

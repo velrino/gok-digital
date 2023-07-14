@@ -120,7 +120,7 @@ export const GenerateSignatureComponent: React.FC = () => {
             children: <>
                 <Row className="container" justify={'center'}>
                     <Col lg={24} className='text-center margin-bottom-md'>
-                        <Typography.Title level={4} className='margin-0'> Basta apenas selecionar tudo, copiar e colar no seu e-mail</Typography.Title>
+                        <Typography.Title level={4} className='margin-0'> Basta apenas selecionar tudo, copiar e colar na Assinatura do seu e-mail</Typography.Title>
                     </Col>
                     <Col lg={24}>
                         <div>
